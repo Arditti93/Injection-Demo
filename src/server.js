@@ -9,5 +9,3 @@ app.use("/static", express.static("public"));
 app.listen(port, ()=> {
     console.log(`Listing on port ${port}`)
 })
-
-``

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>My Profile</h1> 
+
+    <form  id="myFormId" action="/login" method="POST">
+        <label for="username">Username</label><br>
+        <input type="text" id="fname" name="username"><br>
+        <label for="password">Password</label><br>
+        <input type="text" id="fname" name="password"><br>
+        <button type="submit">Submit</button>
+    </form>
+
+    <div id="profile"></div>
+
+    <script>
+        document.forms['myFormId'].addEventListener('submit', (event) => {
+            event.preventDefault();
+            fetch(event.target.action, {
+                method: 'POST',
+                body: new URLSearchParams(new FormData(event.target)) 
+            }).then((response) => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json(); 
+            }).then((body) => {
+                // -------------------- \\
+                console.log(body)
+                displayDetails(body)
+            }).catch((error) => {
+                console.log(error)
+                console.log("in error")
+            })
+        });
+
+        const displayDetails = (user) => {
+            console.log("------------")
+            console.log(user)
+            for (i = 0; i < user.length; i++) {
+                let tree = document.createDocumentFragment();
+
+                const heading = document.createElement('h2')
+                heading.appendChild(document.createTextNode("Hello " + user[i].username +" your details are"));
+                tree.appendChild(heading);
+
+                const username = document.createElement(`p`);
+                username.appendChild(document.createTextNode( "Your Username is -  " + user[i].username));
+                tree.appendChild(username);
+
+                const password = document.createElement(`p`);
+                password.appendChild(document.createTextNode("Your Password is -  " + user[i].password));
+                tree.appendChild(password);
+
+                document.getElementById("profile").appendChild(tree);
+            } 
+        }
+    </script>
+</body>
+</html>

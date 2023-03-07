@@ -7,6 +7,72 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Hello World</h1>
+    <h1>Find My Invoice</h1> 
+
+    <nav>
+        <ul>
+          <li><a href="http://localhost:5001/static/login.html">My Profile</a></li>
+        </ul>
+    </nav>
+
+    <form  id="myFormId" action="/getInvoice" method="POST">
+        <label for="username">Enter your Invoice Id</label><br>
+        <br>
+        <input type="text" id="fname" name="username"><br>
+        <br>
+        <button type="submit">Submit</button>
+    </form>
+
+    <div id="invoice"></div>
+
+    <script>
+        document.forms['myFormId'].addEventListener('submit', (event) => {
+            event.preventDefault();
+            fetch(event.target.action, {
+                method: 'POST',
+                body: new URLSearchParams(new FormData(event.target)) 
+            }).then((response) => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json(); 
+            }).then((body) => {
+                displayInvoice(body)
+            }).catch((error) => {
+                // TODO handle error
+            });
+        });
+        const displayInvoice = (invoice) => {
+            for (i = 0; i < invoice.length; i++) {
+                let tree = document.createDocumentFragment();
+
+                const heading = document.createElement('h2')
+                heading.appendChild(document.createTextNode("Your Invoice"));
+                tree.appendChild(heading);
+
+                const id = document.createElement(`p`);
+                id.appendChild(document.createTextNode( "Invoice Id -  " + invoice[i].invoiceId));
+                tree.appendChild(id);
+
+                const product = document.createElement(`p`);
+                product.appendChild(document.createTextNode("Product -  " + invoice[i].product));
+                tree.appendChild(product);
+
+                const amount = document.createElement(`p`);
+                amount.appendChild(document.createTextNode("Amount -  " + invoice[i].amount));
+                tree.appendChild(amount);
+
+                const user = document.createElement(`p`);
+                user.appendChild(document.createTextNode("User -  " + invoice[i].username));
+                tree.appendChild(user); 
+
+                const line = document.createElement('p')
+                line.appendChild(document.createTextNode("--------------------------" ));
+                tree.appendChild(line); 
+
+                document.getElementById("invoice").appendChild(tree);
+            } 
+        }
+    </script>
 </body>
 </html>

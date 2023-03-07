@@ -1,7 +1,7 @@
 
 const { sequelize } = require("../db/connection");
-const Invoices = require("./table")
 
+const Invoices = require("./invoice")
 const User = require("./user")
 
 const creatInvoice = async () => {
@@ -37,5 +37,3 @@ const creatAcc = async () => {
 }
 
 // creatAcc()
-
-// -------------------------------------
